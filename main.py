@@ -25,7 +25,7 @@ for foldername in os.listdir(directory):
 
                 x,y,w,h = 1075, 1075-(i*125), 138, 51  
                 ROI1 = thresh[y:y+h,x:x+w]
-                data = pytesseract.image_to_string(ROI1, lang='eng',config='--psm 7 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+                data = pytesseract.image_to_string(ROI1, lang='eng',config='--psm 7 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789')
 
                 ##############################################
                 # DAMAGE NUMBERS
@@ -53,7 +53,7 @@ for foldername in os.listdir(directory):
                 
                 x,y,w,h = 1075, 393+(i*125), 138, 51  
                 ROI1 = thresh[y:y+h,x:x+w]
-                data = pytesseract.image_to_string(ROI1, lang='eng',config='--psm 7 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+                data = pytesseract.image_to_string(ROI1, lang='eng',config='--psm 7 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789')
 
                 ##############################################
                 # DAMAGE NUMBERS
