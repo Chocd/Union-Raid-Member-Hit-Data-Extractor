@@ -3,9 +3,9 @@
 
 ## Usage instructions
 
-1- Get all requirements 
-2- Put all images into folders seperated by day 
-3- run main.py 
+1- Get all requirements  
+2- Put all images into folders seperated by day   
+3- run main.py   
 
 Outer folder must be named IMAGES. So an image file for day 2 should be in ..IMAGES/DAY2/imagename.jpg
 
