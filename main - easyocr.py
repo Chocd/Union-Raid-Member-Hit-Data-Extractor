@@ -1,9 +1,18 @@
 import cv2
-import pytesseract
+import easyocr
 import os
+from itertools import zip_longest
+from difflib import SequenceMatcher
 
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
+def compare(a: str, b: str) -> set[tuple[int,str]]:
+    diff_set = set()
+    for i, (ai, bi) in enumerate(zip_longest(a, b)):
+        if ai != bi:
+            diff_set.add( (i, bi) )
+    return diff_set
+
+reader = easyocr.Reader(['en'])
 
 directory = 'IMAGES'
 dayDict = dict()
@@ -37,17 +46,14 @@ for foldername in os.listdir(directory):
 
                 x,y,w,h = 1075, 1075-(i*125), 138, 51  
                 ROI1 = thresh[y:y+h,x:x+w]
-                data = pytesseract.image_to_string(ROI1, lang='eng',config='--psm 7 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789')
-
+                data = reader.readtext(ROI1, detail = 0, allowlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789')[0]
                 ##############################################
                 # DAMAGE NUMBERS
                 ##############################################
                 
                 x,y,w,h = 1370, 1068-(i*125), 153, 61  
                 ROI2 = thresh2[y:y+h,x:x+w]
-                data2 = pytesseract.image_to_string(ROI2, lang='eng',config='--psm 6 -c tessedit_char_whitelist=0123456789,.')
-                
-
+                data2 = reader.readtext(ROI2, detail = 0, allowlist = '0123456789,.', decoder = 'wordbeamsearch')[0]
 
                 ##############################################
                 # BOSS NAMES
@@ -55,8 +61,7 @@ for foldername in os.listdir(directory):
 
                 x,y,w,h = 1102, 1119-(i*125), 155, 50  
                 ROI3 = thresh[y:y+h,x:x+w]
-                data3 = pytesseract.image_to_string(ROI3, lang='eng',config='--psm 7 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789')
-
+                data3 = reader.readtext(ROI3, detail = 0, allowlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ', decoder = 'wordbeamsearch')[0]
                 ##############################################
 
                 playerName = str(data).replace("\n","")
@@ -69,8 +74,30 @@ for foldername in os.listdir(directory):
                     playerDict[playerName].append(bossName)
                     playerDict[playerName].append(hitAmount)
                 else:
-                    playerDict[playerName] = [bossName]
-                    playerDict[playerName].append(hitAmount)
+                    for key in playerDict.keys():
+                        comp = compare(playerName,key)
+                        #print(key +" "+playerName + " " + str(len(key)) +" " +str(len(comp)) +" "+str(SequenceMatcher(None, key, playerName).find_longest_match().size))
+                        
+                        if (len(key) - len(comp) >= 4 or SequenceMatcher(None, key, playerName).find_longest_match().size >= 3) and not ((SequenceMatcher(None, key, playerName).find_longest_match().size == len(playerName)) or (SequenceMatcher(None, key, playerName).find_longest_match().size == len(key))) :
+                            playerDict[key].append(bossName)
+                            playerDict[key].append(hitAmount)
+                            break
+                    else:
+                        foundFlag = False
+                        for days in dayDict.keys():
+                            for players in dayDict[days].keys():
+                                comp = compare(playerName,players)
+                                
+                                if (len(players) - len(comp) >= 4 or SequenceMatcher(None, players, playerName).find_longest_match().size >= 3) and not ((SequenceMatcher(None, players, playerName).find_longest_match().size == len(playerName)) or (SequenceMatcher(None, players, playerName).find_longest_match().size == len(players))) :
+                                    playerDict[players] = [bossName]
+                                    playerDict[players].append(hitAmount)
+                                    foundFlag = True
+                                    break
+                            if foundFlag:
+                                break
+                        else:
+                            playerDict[playerName] = [bossName]
+                            playerDict[playerName].append(hitAmount)
         else:
             for i in range(6):
 
@@ -80,16 +107,14 @@ for foldername in os.listdir(directory):
                 
                 x,y,w,h = 1075, 393+(i*125), 138, 51  
                 ROI1 = thresh[y:y+h,x:x+w]
-                data = pytesseract.image_to_string(ROI1, lang='eng',config='--psm 7 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789')
-
+                data = reader.readtext(ROI1, detail = 0, allowlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789')[0]
                 ##############################################
                 # DAMAGE NUMBERS
                 ##############################################
                 
                 x,y,w,h = 1380, 397+(i*125), 140, 44  
                 ROI2 = thresh2[y:y+h,x:x+w]
-                data2 = pytesseract.image_to_string(ROI2, lang='eng',config='--psm 7 -c tessedit_char_whitelist=0123456789,.')
-                
+                data2 = reader.readtext(ROI2, detail = 0,  allowlist = '0123456789,.', decoder = 'wordbeamsearch')[0]
 
                 ##############################################
                 # BOSS NAMES
@@ -97,8 +122,7 @@ for foldername in os.listdir(directory):
 
                 x,y,w,h = 1102, 438+(i*125), 152, 50  
                 ROI3 = thresh[y:y+h,x:x+w]
-                data3 = pytesseract.image_to_string(ROI3, lang='eng',config='--psm 7 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789')
-
+                data3 = reader.readtext(ROI3, detail = 0, allowlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ', decoder = 'wordbeamsearch')[0]
 
                 ##############################################
 
@@ -113,8 +137,29 @@ for foldername in os.listdir(directory):
                     playerDict[playerName].append(bossName)
                     playerDict[playerName].append(hitAmount)
                 else:
-                    playerDict[playerName] = [bossName]
-                    playerDict[playerName].append(hitAmount)
+                    for key in playerDict.keys():
+                        comp = compare(playerName,key)
+
+                        if (len(key) - len(comp) >= 4 or SequenceMatcher(None, key, playerName).find_longest_match().size >= 3) and not ((SequenceMatcher(None, key, playerName).find_longest_match().size == len(playerName)) or (SequenceMatcher(None, key, playerName).find_longest_match().size == len(key))) :
+                            playerDict[key].append(bossName)
+                            playerDict[key].append(hitAmount)
+                            break
+                    else:
+                        foundFlag = False
+                        for days in dayDict.keys():
+                            for players in dayDict[days].keys():
+                                comp = compare(playerName,players)
+                                
+                                if (len(players) - len(comp) >= 4 or SequenceMatcher(None, players, playerName).find_longest_match().size >= 3) and not ((SequenceMatcher(None, players, playerName).find_longest_match().size == len(playerName)) or (SequenceMatcher(None, players, playerName).find_longest_match().size == len(players))) :
+                                    playerDict[players] = [bossName]
+                                    playerDict[players].append(hitAmount)
+                                    foundFlag = True
+                                    break
+                            if foundFlag:
+                                break
+                        else:
+                            playerDict[playerName] = [bossName]
+                            playerDict[playerName].append(hitAmount)
         
     dayDict[foldername] = playerDict
     playerDict = dict()
@@ -136,7 +181,7 @@ for keyofday, day in dayDict.items():
                     playerTotalDamageDict[key] = playerTotalDamageDict[key] + int(damage)
 
 
-with open('output.csv', 'a') as f:
+with open('outputocr.csv', 'a') as f:
     for key, value in playerTotalDamageDict.items():
         f.write(str(key)+","+str(value))
         for day, dayval in dayDict.items():
