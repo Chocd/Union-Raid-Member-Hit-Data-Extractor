@@ -14,7 +14,11 @@ for foldername in os.listdir(directory):
     for currimage in os.listdir(directory+'/'+foldername):
         print(foldername)
         image = cv2.imread(directory+'/'+foldername + '/'+currimage, 0)
-        thresh = 255 - cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU )[1]
+        thresh1 = 255 - cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU )[1]
+    
+        blur = cv2.GaussianBlur(thresh1, (3, 3), 0)
+        thresh = 255 - cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU )[1]
+
 
 
         if str(currimage).startswith('extra'):
