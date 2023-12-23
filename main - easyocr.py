@@ -182,6 +182,7 @@ for keyofday, day in dayDict.items():
 
 
 with open('outputocr.csv', 'a') as f:
+    f.write("SEP=,\n")
     for key, value in playerTotalDamageDict.items():
         f.write(str(key)+","+str(value))
         for day, dayval in dayDict.items():
