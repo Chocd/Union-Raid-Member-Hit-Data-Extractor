@@ -18,4 +18,4 @@ image files must show 6 members from the top, with previous members completely h
 
 last image (so first members to hit for the day) must be named extraN.xxx, where N is the number of members left to get.
 
-#### CURRENTLY ONLY WORKS WITH 1440P SCREENS BECAUSE I WAS TO LAZY TO ADD UPSCALER/DOWNSCALER AND CHECK. CHANGE COORDINATES IN CODE IF YOU WANT TO USE ANOTHER RESOLUTION
+#### CURRENTLY ONLY WORKS WITH 1440P SCREENS
