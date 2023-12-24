@@ -4,10 +4,16 @@
 
 ## Usage instructions
 
-1- Get all requirements installed (cv2 and tesseract)  
+1- Get all requirements installed (cv2 and tesseract/easyocr)  
 pip3 install opencv-python   
-pip3 install pytesseract   
+
+pip3 install pytesseract
 https://tesseract-ocr.github.io/tessdoc/Installation.html   
+
+or
+
+pip3 install easyocr
+
 
 2- Put all images into folders seperated by day   
 3- run main.py   
