@@ -107,14 +107,14 @@ for foldername in os.listdir(directory):
                 # MEMBER NAMES
                 ##############################################
                 
-                x,y,w,h = 1075, 393+(i*125), 138, 51  
+                x,y,w,h = 1075, 455+(i*125), 138, 51  
                 ROI1 = thresh[y:y+h,x:x+w]
                 data = reader.readtext(ROI1, detail = 0, allowlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789')[0]
                 ##############################################
                 # DAMAGE NUMBERS
                 ##############################################
                 
-                x,y,w,h = 1380, 397+(i*125), 140, 44  
+                x,y,w,h = 1380, 458+(i*125), 140, 44  
                 ROI2 = thresh2[y:y+h,x:x+w]
                 data2 = reader.readtext(ROI2, detail = 0,  allowlist = '0123456789,.', decoder = 'wordbeamsearch')[0]
 
@@ -122,7 +122,7 @@ for foldername in os.listdir(directory):
                 # BOSS NAMES
                 ##############################################
 
-                x,y,w,h = 1102, 438+(i*125), 152, 50  
+                x,y,w,h = 1102, 504+(i*125), 152, 35  
                 ROI3 = thresh[y:y+h,x:x+w]
                 data3 = reader.readtext(ROI3, detail = 0, allowlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ', decoder = 'wordbeamsearch')[0]
 

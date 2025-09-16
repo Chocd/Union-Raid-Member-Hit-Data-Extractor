@@ -1,3 +1,7 @@
+
+# Blabla now has this function built in: https://www.blablalink.com/shiftyspad/union-raid
+#### only took them two years
+
 #### Uses CV2 AND TESSERACT OR EASYOCR TO READ MEMBER DATA WITH OCR AND OUTPUT A CSV FILE
 
 #### EASYOCR IS 10 TIMES BETTER USE THAT
